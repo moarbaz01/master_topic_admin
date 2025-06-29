@@ -2,7 +2,7 @@
 
 import { CldUploadWidget } from "next-cloudinary";
 import { Button } from "@/components/ui/button";
-import { UploadCloud} from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useAddMedia } from "@/queries/media";
 import type { MediaType } from "@/services/media";
@@ -25,6 +25,7 @@ export default function UploadMediaModal() {
       duration: info.duration,
       width: info.width,
       height: info.height,
+      tags: [],
     };
 
     addMedia.mutate(file, {

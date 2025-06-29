@@ -11,6 +11,7 @@ export interface MediaType {
   duration?: number;
   width?: number;
   height?: number;
+  tags?: string[];
 }
 
 export const MediaServices = {
