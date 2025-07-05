@@ -23,11 +23,12 @@ export function MediaPickerModal({
   onSelect: (url: string) => void;
   filterFormat?: string;
 }) {
-  const { data = [], isLoading } = useMedia();
+  const { data, isLoading } = useMedia({});
+  const mediaData = data?.data ?? [];
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
-    return data.filter((m) => {
+    return mediaData.filter((m) => {
       const searchMatch =
         m.name.toLowerCase().includes(search.toLowerCase()) ||
         m.tags?.some((t: string) =>

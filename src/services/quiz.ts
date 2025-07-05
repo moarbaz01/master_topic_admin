@@ -1,13 +1,17 @@
 import { supabase } from "@/lib/supabase/client";
+import {
+  CreateQuiz,
+  CreateQuizOption,
+  CreateQuizQuestion,
+  CreateQuizSection,
+  QuizSectionType,
+  QuizType,
+} from "@/types/quiz";
 
 export const QuizService = {
   // ─────────────── Quizzes ───────────────
 
-  async addQuiz(quiz: {
-    title: string;
-    total_questions?: number;
-    total_time?: number;
-  }) {
+  async addQuiz(quiz: CreateQuiz) {
     const { data, error } = await supabase
       .from("quizzes")
       .insert(quiz)
@@ -33,14 +37,7 @@ export const QuizService = {
     return data;
   },
 
-  async updateQuiz(
-    id: string,
-    updates: Partial<{
-      title: string;
-      total_questions: number;
-      total_time: number;
-    }>
-  ) {
+  async updateQuiz(id: string, updates: Partial<QuizType>) {
     const { data, error } = await supabase
       .from("quizzes")
       .update(updates)
@@ -68,11 +65,7 @@ export const QuizService = {
     return data;
   },
 
-  async addSection(section: {
-    quiz_id: string;
-    title: string;
-    total_questions?: number;
-  }) {
+  async addSection(section: CreateQuizSection) {
     const { data, error } = await supabase
       .from("quiz_sections")
       .insert(section)
@@ -122,17 +115,7 @@ export const QuizService = {
     return data;
   },
 
-  async addQuestion(question: {
-    quiz_id: string;
-    section_id: string;
-    type: string;
-    question: string;
-    description?: string;
-    image?: string;
-    audio?: string;
-    images?: string[];
-    correct_answer: string;
-  }) {
+  async addQuestion(question: CreateQuizQuestion) {
     const { data, error } = await supabase
       .from("quiz_questions")
       .insert(question)
@@ -173,12 +156,7 @@ export const QuizService = {
 
   // ─────────────── Options ───────────────
 
-  async addOption(option: {
-    question_id: string;
-    text?: string;
-    image?: string;
-    audio?: string;
-  }) {
+  async addOption(option: CreateQuizOption) {
     const { data, error } = await supabase
       .from("quiz_options")
       .insert(option)

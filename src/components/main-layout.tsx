@@ -13,7 +13,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
         {/* Main Content - Adjusts for sidebar */}
         <main
-          className="flex-1 min-h-screen lg:ml-[200px] p-4 md:p-6  overflow-y-auto"
+          className="flex-1 min-h-screen  lg:ml-[100px] xl:ml-[200px] p-4 md:p-6  overflow-y-auto"
           id="main-content"
         >
           <div className="  mx-auto w-full">{children}</div>

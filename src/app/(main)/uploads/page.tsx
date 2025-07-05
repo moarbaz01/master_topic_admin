@@ -11,8 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Edit, Trash, View, Filter } from "lucide-react";
-import MediaFilters from "@/components/media-filters";
+import { Search, Edit, Trash, View } from "lucide-react";
 import CreateTagModal from "@/components/create-tag-modal";
 import CloudinaryUpload from "@/components/cloudinary-widget";
 import { getThumbnailUrl } from "@/utils/thumbGenerater";
@@ -21,12 +20,6 @@ import { useRouter } from "next/navigation";
 import UpdateMediaModal from "@/components/modals/update-media-modal";
 import toast from "react-hot-toast";
 import TransparentLoader from "@/components/loader";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import {
   HoverCard,
@@ -41,11 +34,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import PaginationControl from "@/components/pagination-control";
 
 export default function MediaLibrary() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchName, setSearchName] = useState("");
   const [showTagModal, setShowTagModal] = useState(false);
-  const { data: mediaItems = [], isLoading } = useMedia();
+
   const { data: tags } = useTags();
   const deleteMedia = useDeleteMedia();
   const [isEditMedia, setIsEditMedia] = useState(false);
@@ -53,19 +47,18 @@ export default function MediaLibrary() {
   const [typeFilter, setTypeFilter] = useState("none");
   const [tagFilter, setTagFilter] = useState("none");
   const router = useRouter();
-
-  const filteredItems = mediaItems
-    .filter((item) =>
-      typeFilter && typeFilter !== "none" ? item.type === typeFilter : true
-    )
-    .filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter((item) =>
-      tagFilter && tagFilter !== "none"
-        ? item.tags && item.tags.includes(tagFilter)
-        : true
-    );
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const { data, isLoading } = useMedia({
+    page,
+    limit,
+    type: typeFilter, // "image" | "video"
+    name: searchName ?? undefined, // by name or tag
+    tag: tagFilter,
+  });
+  const mediaItems = data?.data;
+  console.log("media Items", mediaItems);
+  const total = data?.count || 0;
 
   const handleUpdateMedia = (media: any) => {
     setIsEditMedia(true);
@@ -95,10 +88,6 @@ export default function MediaLibrary() {
     );
   };
 
-  if (isLoading) {
-    return <div className="text-muted-foreground">Loading media...</div>;
-  }
-
   return (
     <div className=" space-y-6">
       <div className="flex justify-between items-center">
@@ -114,8 +103,8 @@ export default function MediaLibrary() {
         <Input
           placeholder="Search media by title..."
           className="pl-10"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
         />
       </div>
 
@@ -164,71 +153,92 @@ export default function MediaLibrary() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredItems.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="font-medium">
-                  <Image
-                    alt={item.name}
-                    src={getThumbnailUrl(item.url, item.type)}
-                    height={50}
-                    width={50}
-                  />
-                </TableCell>
-                <TableCell className="font-medium">{item.name}</TableCell>
-                <TableCell className="font-medium">
-                  <a href={item.url}>{item.url}</a>
-                </TableCell>
-                <TableCell className="capitalize">{item.type}</TableCell>
-                <TableCell>
-                  {item?.tags && item.tags.length > 0 ? (
-                    <HoverCard>
-                      <HoverCardTrigger asChild>
-                        <Button variant="link">View Tags</Button>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80">
-                        <div className="flex flex-wrap gap-2">
-                          {(item.tags as string[]).map((tag) => (
-                            <Badge variant="outline" key={tag}>
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">N/A</span>
-                  )}
-                </TableCell>
-
-                <TableCell>{item?.format}</TableCell>
-                <TableCell>{(item.size / 1024 / 1024).toFixed(2)} MB</TableCell>
-
-                <TableCell className="text-right space-x-4">
-                  <Button
-                    onClick={() => router.push(`/uploads/${item?.id}`)}
-                    className="bg-blue-500 hover:bg-blue-300 transition text-white"
-                    size="icon"
-                  >
-                    <View />
-                  </Button>
-                  <Button onClick={() => handleUpdateMedia(item)} size="icon">
-                    <Edit />
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      handleDeleteMedia(item.id, item.publicId, item.format)
-                    }
-                    className="bg-red-500 hover:bg-red-400 transition text-white"
-                    size="icon"
-                  >
-                    <Trash />
-                  </Button>
-                </TableCell>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={6}>Loading...</TableCell>
               </TableRow>
-            ))}
+            ) : mediaItems?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6}>No media found</TableCell>
+              </TableRow>
+            ) : (
+              mediaItems?.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">
+                    <Image
+                      alt={item.name}
+                      src={getThumbnailUrl(item.url, item.format)}
+                      height={50}
+                      width={50}
+                    />
+                  </TableCell>
+                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <a className="text-primary" target="_blank" href={item.url}>
+                      Live View
+                    </a>
+                  </TableCell>
+                  <TableCell className="capitalize">{item.type}</TableCell>
+                  <TableCell>
+                    {item?.tags && item.tags.length > 0 ? (
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <Button variant="link">View Tags</Button>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80">
+                          <div className="flex flex-wrap gap-2">
+                            {(item.tags as string[]).map((tag) => (
+                              <Badge variant="outline" key={tag}>
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">N/A</span>
+                    )}
+                  </TableCell>
+
+                  <TableCell>{item?.format}</TableCell>
+                  <TableCell>
+                    {(item.size / 1024 / 1024).toFixed(2)} MB
+                  </TableCell>
+
+                  <TableCell className="text-right space-x-4">
+                    <Button
+                      onClick={() => router.push(`/uploads/${item?.id}`)}
+                      className="bg-blue-500 hover:bg-blue-300 transition text-white"
+                      size="icon"
+                    >
+                      <View />
+                    </Button>
+                    <Button onClick={() => handleUpdateMedia(item)} size="icon">
+                      <Edit />
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        handleDeleteMedia(item.id, item.publicId, item.format)
+                      }
+                      className="bg-red-500 hover:bg-red-400 transition text-white"
+                      size="icon"
+                    >
+                      <Trash />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
+
+      <PaginationControl
+        limit={limit}
+        page={page}
+        total={total}
+        onPageChange={(page) => setPage(page)}
+      />
 
       {/* Tag Creation Modal */}
       <CreateTagModal

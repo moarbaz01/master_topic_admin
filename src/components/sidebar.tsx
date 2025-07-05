@@ -1,7 +1,6 @@
 "use client";
 import {
   Bell,
-  CreditCard,
   GraduationCap,
   Home,
   Lightbulb,
@@ -9,6 +8,7 @@ import {
   Tags,
   UploadIcon,
   Users,
+  WholeWord,
 } from "lucide-react";
 
 import {
@@ -16,21 +16,20 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AuthService } from "../services/auth.service";
-import { Card } from "./ui/card";
+import { useState } from "react";
+import WarnModal from "./modals/warn-modal";
+import { AuthService } from "@/services/auth";
 
 // Menu items.
 const items = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/",
     icon: Home,
   },
@@ -43,6 +42,11 @@ const items = [
     title: "Uploads",
     url: "/uploads",
     icon: UploadIcon,
+  },
+  {
+    title: "Vocabularies",
+    url: "/vocabs",
+    icon: WholeWord,
   },
   {
     title: "Quizzes",
@@ -59,11 +63,7 @@ const items = [
     url: "/notifications",
     icon: Bell,
   },
-  {
-    title: "Subscription",
-    url: "/subscriptions",
-    icon: CreditCard,
-  },
+
   {
     title: "Users",
     url: "/users",
@@ -78,12 +78,14 @@ const items = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [logoutModal, setLogoutModal] = useState(false);
 
   return (
     <>
       {/* Sidebar */}
       <nav aria-label="Main navigation ">
         <UISidebar
+          variant="floating"
           className={`fixed lg:sticky   transform transition-transform duration-200  ease-in-out `}
         >
           <SidebarContent className="py-4 px-2   ">
@@ -99,14 +101,18 @@ export function Sidebar() {
                         className="py-4"
                       >
                         {item.title === "Logout" ? (
-                          <div onClick={AuthService.signOut}>
-                            <item.icon className="text-lg" />
-                            <span className="text-lg pl-2">{item.title}</span>
+                          <div onClick={() => setLogoutModal(true)}>
+                            <item.icon size={32} />
+                            <span className="text-lg  font-semibold  pl-2">
+                              {item.title}
+                            </span>
                           </div>
                         ) : (
                           <Link href={item.url}>
-                            <item.icon className="text-lg" />
-                            <span className="text-lg pl-2">{item.title}</span>
+                            <item.icon size={32} />
+                            <span className="text-lg font-semibold pl-2">
+                              {item.title}
+                            </span>
                           </Link>
                         )}
                       </SidebarMenuButton>
@@ -118,6 +124,17 @@ export function Sidebar() {
           </SidebarContent>
         </UISidebar>
       </nav>
+
+      <WarnModal
+        title="Do you want to logout?"
+        desc="Are you sure you want to logout? You will be redirected to the login page"
+        open={logoutModal}
+        onClose={() => setLogoutModal(false)}
+        onC={() => {
+          AuthService.signOut();
+          setLogoutModal(false);
+        }}
+      />
     </>
   );
 }

@@ -6,7 +6,6 @@ export default async function MediaViewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  console.log(id)
 
-  return <MediaDetailPage id={id} />
+  return <MediaDetailPage id={id} />;
 }

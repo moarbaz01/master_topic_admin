@@ -13,7 +13,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Loader2, Smartphone } from "lucide-react";
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../../../services/auth";
 import { CountryCodeSelect } from "@/components/country-code-select";
 
 export default function MobileLoginPage() {

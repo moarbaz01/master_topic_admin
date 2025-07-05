@@ -1,19 +1,20 @@
 // /queries/media.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { MediaServices } from "@/services/media"; // assuming your service is saved as /services/media.ts
+import { MediaService } from "@/services/media"; // assuming your service is saved as /services/media.ts
 import { CloudinaryService } from "@/services/cloudinary";
+import { GetMediaParams } from "@/types/media";
 
-export const useMedia = () => {
+export const useMedia = (params: GetMediaParams) => {
   return useQuery({
-    queryKey: ["media"],
-    queryFn: MediaServices.getMedia,
+    queryKey: ["media", params],
+    queryFn: () => MediaService.getMedia(params),
   });
 };
 
 export const useAddMedia = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: MediaServices.addMedia,
+    mutationFn: MediaService.addMedia,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
     },
@@ -37,7 +38,7 @@ export const useDeleteMedia = () => {
       await CloudinaryService.deleteMedia(publicId, format);
 
       // 2. Delete from your Supabase/DB
-      await MediaServices.deleteMedia(id);
+      await MediaService.deleteMedia(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
@@ -51,7 +52,7 @@ export const useDeleteMedia = () => {
 export const useGetMediaById = (id: string) => {
   return useQuery({
     queryKey: ["media", id],
-    queryFn: () => MediaServices.getMediaById(id),
+    queryFn: () => MediaService.getMediaById(id),
   });
 };
 
@@ -63,8 +64,8 @@ export const useUpdateMedia = () => {
       data,
     }: {
       id: string;
-      data: Partial<Parameters<typeof MediaServices.updateMedia>[1]>;
-    }) => MediaServices.updateMedia(id, data),
+      data: Partial<Parameters<typeof MediaService.updateMedia>[1]>;
+    }) => MediaService.updateMedia(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
     },

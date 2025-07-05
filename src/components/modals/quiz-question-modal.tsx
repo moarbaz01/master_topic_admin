@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MediaSelectInput } from "../media-select";
+import { X } from "lucide-react";
 
 const questionTypes = [
   { value: "text", label: "Text Question" },
@@ -43,19 +44,37 @@ export default function QuizQuestionModal({
   const [questionType, setQuestionType] = useState("text");
   const [question, setQuestion] = useState("");
   const [description, setDescription] = useState("");
-  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [correctAnswer, setCorrectAnswer] = useState("1");
   const [image, setImage] = useState("");
   const [audio, setAudio] = useState("");
-  const [options, setOptions] = useState(["", ""]);
+  const [options, setOptions] = useState<string[]>([" "]);
+
+  const handleOptionChange = (index: number, value: string) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    setOptions(newOptions);
+  };
+
+  const addOption = () => {
+    setOptions([...options, ""]);
+  };
+
+  const removeOption = (index: number) => {
+    const newOptions = options.filter((_, i) => i !== index);
+    setOptions(newOptions);
+  };
 
   const handleSubmit = () => {
-    // Validate fields based on type
     if (!question || !correctAnswer) {
       toast.error("Question and correct answer are required");
       return;
     }
 
-    // Example payload
+    if (questionType === "multiple_choice" && options.length < 4) {
+      toast.error("At least 4 options are required");
+      return;
+    }
+
     const payload = {
       quiz_id,
       section_id,
@@ -65,7 +84,7 @@ export default function QuizQuestionModal({
       correct_answer: correctAnswer,
       image,
       audio,
-      options: questionType,
+      options,
     };
 
     console.log("Submit payload:", payload);
@@ -75,7 +94,7 @@ export default function QuizQuestionModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[80%] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Question</DialogTitle>
         </DialogHeader>
@@ -118,18 +137,62 @@ export default function QuizQuestionModal({
             />
           </div>
 
+          {/* Media */}
           <MediaSelectInput value={image} onChange={setImage} label="Image" />
-
-          <MediaSelectInput value={audio} onChange={setAudio} label="Audio " />
+          <MediaSelectInput value={audio} onChange={setAudio} label="Audio" />
 
           {/* Correct Answer */}
           <div className="space-y-4">
-            <Label>Correct Answer</Label>
-            <Input
-              placeholder="Enter correct answer"
-              value={correctAnswer}
-              onChange={(e) => setCorrectAnswer(e.target.value)}
-            />
+            <Label className="text-gray-400">Correct Answer</Label>
+            <Select value={correctAnswer} onValueChange={setCorrectAnswer}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select Correct Answer" />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((t, i) =>
+                  t.trim() !== "" ? (
+                    <SelectItem key={i} value={t}>
+                      {i + 1}
+                    </SelectItem>
+                  ) : null
+                )}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Options (Only for multiple choice) */}
+          {/* Options Field - Always Visible */}
+          <div className="space-y-2">
+            <Label>Options</Label>
+            {options.map((opt, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                {questionType === "image" || questionType === "audio" ? (
+                  <MediaSelectInput
+                    value={opt}
+                    onChange={(val) => handleOptionChange(idx, val)}
+                    label={`Option ${idx + 1}`}
+                  />
+                ) : (
+                  <Input
+                    value={opt}
+                    onChange={(e) => handleOptionChange(idx, e.target.value)}
+                    placeholder={`Option ${idx + 1}`}
+                  />
+                )}
+                {options.length > 2 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeOption(idx)}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button variant="outline" onClick={addOption}>
+              + Add Option
+            </Button>
           </div>
         </div>
 
