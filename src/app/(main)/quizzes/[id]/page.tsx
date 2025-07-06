@@ -2,15 +2,6 @@
 
 import { ArrowLeft, Plus } from "lucide-react";
 import {
-  useAddSection,
-  useAddQuestion,
-  useAddOption,
-  useDeleteSection,
-  useDeleteQuestion,
-  useDeleteOption,
-  useUpdateSection,
-  useUpdateQuestion,
-  useUpdateOption,
   useGetQuizById,
   useGetSectionsByQuizId,
 } from "@/queries/quiz";
@@ -32,17 +23,6 @@ export default function QuizEditPage() {
   const [openSectionModal, setOpenSectionModal] = useState(false);
   const [openQuestionModal, setOpenQuestionModal] = useState(false);
   const router = useRouter();
-
-  // const addSection = useAddSection();
-  // const addQuestion = useAddQuestion();
-  // const addOption = useAddOption();
-
-  // const deleteSection = useDeleteSection();
-  // const deleteOption = useDeleteOption();
-
-  // const updateSection = useUpdateSection();
-  // const updateQuestion = useUpdateQuestion();
-  // const updateOption = useUpdateOption();
 
   const handleAddQuestion = (section_id: string) => {
     setCurrentSectionId(section_id);

@@ -6,7 +6,7 @@ export async function DELETE(req: Request) {
   try {
     const { publicId, format } = await req.json();
 
-    if (!publicId || !format) {
+    if (!publicId ) {
       return NextResponse.json(
         { message: "Please Provide Public Id and Format" },
         { status: 400 }

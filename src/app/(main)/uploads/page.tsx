@@ -97,19 +97,18 @@ export default function MediaLibrary() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search media by title..."
-          className="pl-10"
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
-        />
-      </div>
-
       {/* Filters */}
       <div className="flex gap-2">
+        {/* Search Bar */}
+        <div className="relative max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search media by title..."
+            className="pl-10"
+            value={searchName}
+            onChange={(e) => setSearchName(e.target.value)}
+          />
+        </div>
         <Select onValueChange={(e) => setTypeFilter(e)}>
           <SelectTrigger>
             <SelectValue placeholder="Select Type" />

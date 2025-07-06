@@ -1,21 +1,40 @@
+"use client";
 import { FC } from "react";
 import { VocabularyCardProps } from "@/types/vocabs";
+import {
+  Card,
+} from "../ui/card";
+import { Edit, Trash, WholeWord } from "lucide-react";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const VocabularyCard: FC<VocabularyCardProps> = ({ id, title }) => {
+  const router = useRouter();
+
+  const handleDelete = async () => {};
   return (
-    <div
-      className="bg-white rounded-2xl mb-4 border border-gray-200"
-      style={{ minWidth: 260 }}
-    >
-      <div className="p-5">
-        {/* Title + Bookmark */}
-        <div className="flex-row justify-between items-start mb-3">
-          <div className="flex-1 mr-3">
-            <p className="text-xl font-bold text-gray-900 leading-6">{title}</p>
-          </div>
-        </div>
+    <Card className="flex items-center justify-between p-3 w-full max-w-[200px] text-sm">
+      <div className="flex items-center gap-2 truncate">
+        <WholeWord className="w-4 h-4" />
+        <span className="truncate">{title}</span>
       </div>
-    </div>
+      <div className="flex gap-1">
+        <Button
+          onClick={() => router.push(`/vocabs/${id}`)}
+          size="icon"
+          className="h-7 w-7"
+        >
+          <Edit className="w-3.5 h-3.5" />
+        </Button>
+        <Button
+          className="bg-red-500 hover:bg-red-400 text-white h-7 w-7"
+          size="icon"
+          onClick={handleDelete}
+        >
+          <Trash className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+    </Card>
   );
 };
 

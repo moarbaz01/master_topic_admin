@@ -7,6 +7,7 @@ export function resolveResourceType(format: string): "image" | "video" | "raw" {
   if (imageFormats.includes(format)) return "image";
   if (videoFormats.includes(format)) return "video";
   if (rawFormats.includes(format)) return "raw";
+  if (format === "") return "raw";
 
-  return "image"; // fallback
+  return "raw"; // fallback
 }

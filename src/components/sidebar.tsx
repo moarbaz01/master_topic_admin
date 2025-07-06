@@ -1,6 +1,7 @@
 "use client";
 import {
   Bell,
+  BookOpen,
   GraduationCap,
   Home,
   Lightbulb,
@@ -62,6 +63,10 @@ const items = [
     title: "Notifications",
     url: "/notifications",
     icon: Bell,
+  },{
+    title: "Books",
+    url: "/books",
+    icon: BookOpen,
   },
 
   {

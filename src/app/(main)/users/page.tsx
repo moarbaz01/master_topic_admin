@@ -63,84 +63,64 @@ export default function ManageUsersPage() {
         <h2 className="text-2xl font-bold">Manage Users</h2>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-6">
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Filter by Name
-            </label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name..."
-                className="pl-10"
-                value={nameFilter}
-                onChange={(e) => {
-                  setPage(1);
-                  setNameFilter(e.target.value);
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Filter by Phone
-            </label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by phone..."
-                className="pl-10"
-                value={phoneFilter}
-                onChange={(e) => {
-                  setPage(1);
-                  setPhoneFilter(e.target.value);
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Filter by Role
-            </label>
-            <Select
-              value={roleFilter}
-              onValueChange={(value) => {
+        <div className="flex flex-wrap gap-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name..."
+              className="pl-10"
+              value={nameFilter}
+              onChange={(e) => {
                 setPage(1);
-                setRoleFilter(value);
+                setNameFilter(e.target.value);
               }}
-            >
-              <SelectTrigger className="w-[150px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="user">User</SelectItem>
-              </SelectContent>
-            </Select>
+            />
           </div>
+          <div className="relative max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by phone..."
+              className="pl-10"
+              value={phoneFilter}
+              onChange={(e) => {
+                setPage(1);
+                setPhoneFilter(e.target.value);
+              }}
+            />
+          </div>
+          <Select
+            value={roleFilter}
+            onValueChange={(value) => {
+              setPage(1);
+              setRoleFilter(value);
+            }}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="user">User</SelectItem>
+            </SelectContent>
+          </Select>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Filter by Subscription
-            </label>
-            <Select
-              value={subscriptionFilter}
-              onValueChange={(value) => {
-                setPage(1);
-                setSubscriptionFilter(value);
-              }}
-            >
-              <SelectTrigger className="w-[150px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="basic">Basic</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Select
+            value={subscriptionFilter}
+            onValueChange={(value) => {
+              setPage(1);
+              setSubscriptionFilter(value);
+            }}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="basic">Basic</SelectItem>
+              <SelectItem value="premium">Premium</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Table */}
