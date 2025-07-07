@@ -20,9 +20,21 @@ import {
 import { useGetUsers } from "@/queries/user";
 import { UserType } from "@/types/user";
 import { useState } from "react";
-import { Edit, Search } from "lucide-react";
+import {
+  Crown,
+  Edit,
+  Filter,
+  Phone,
+  RefreshCw,
+  Search,
+  Trash,
+  UserCheck,
+  Users,
+} from "lucide-react";
 import EditUserModal from "@/components/modals/edit-user-modal";
 import PaginationControl from "@/components/pagination-control";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ManageUsersPage() {
   const [roleFilter, setRoleFilter] = useState("all");
@@ -57,13 +69,89 @@ export default function ManageUsersPage() {
     setEditUserModal(false);
   };
 
+  const getStatusBadge = (status: string) => {
+    return status === "active" ? (
+      <Badge
+        variant="default"
+        className="bg-green-100 text-green-800 hover:bg-green-100"
+      >
+        Active
+      </Badge>
+    ) : (
+      <Badge variant="secondary" className="bg-gray-100 text-gray-800">
+        Inactive
+      </Badge>
+    );
+  };
+
+  const getRoleBadge = (role: string) => {
+    return role === "admin" ? (
+      <Badge
+        variant="default"
+        className="bg-purple-100 text-purple-800 hover:bg-purple-100"
+      >
+        <Crown className="w-3 h-3 mr-1" />
+        Admin
+      </Badge>
+    ) : (
+      <Badge variant="outline">
+        <Users className="w-3 h-3 mr-1" />
+        User
+      </Badge>
+    );
+  };
+
+  const getSubscriptionBadge = (subscription: string) => {
+    return subscription === "premium" ? (
+      <Badge
+        variant="default"
+        className="bg-amber-100 text-amber-800 hover:bg-amber-100"
+      >
+        Premium
+      </Badge>
+    ) : (
+      <Badge variant="outline">Basic</Badge>
+    );
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  };
+
+  const clearFilters = () => {
+    setRoleFilter("all");
+    setSubscriptionFilter("all");
+    setNameFilter("");
+    setPhoneFilter("");
+    setPage(1);
+  };
+
+  const activeFiltersCount = [
+    roleFilter !== "all",
+    subscriptionFilter !== "all",
+    nameFilter !== "",
+    phoneFilter !== "",
+  ].filter(Boolean).length;
+
   return (
     <>
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold">Manage Users</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              User Management
+            </h1>
+            <p className="text-muted-foreground">
+              Manage and monitor your user base
+            </p>
+          </div>
+        </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -76,8 +164,8 @@ export default function ManageUsersPage() {
               }}
             />
           </div>
-          <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by phone..."
               className="pl-10"
@@ -95,16 +183,15 @@ export default function ManageUsersPage() {
               setRoleFilter(value);
             }}
           >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue />
+            <SelectTrigger>
+              <SelectValue placeholder="Role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all">All Roles</SelectItem>
               <SelectItem value="admin">Admin</SelectItem>
               <SelectItem value="user">User</SelectItem>
             </SelectContent>
           </Select>
-
           <Select
             value={subscriptionFilter}
             onValueChange={(value) => {
@@ -112,49 +199,89 @@ export default function ManageUsersPage() {
               setSubscriptionFilter(value);
             }}
           >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue />
+            <SelectTrigger>
+              <SelectValue placeholder="Subscription" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="all">All Plans</SelectItem>
               <SelectItem value="basic">Basic</SelectItem>
               <SelectItem value="premium">Premium</SelectItem>
             </SelectContent>
           </Select>
+          {activeFiltersCount > 0 && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              Clear all
+            </Button>
+          )}
         </div>
 
+        {/* Filters */}
+
         {/* Table */}
-        <div className="border rounded-md">
+        <div className="border rounded-lg">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Phone</TableHead>
+                <TableHead>User</TableHead>
                 <TableHead>Gender</TableHead>
+                <TableHead>Contact</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Subscription</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="w-12">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6}>Loading...</TableCell>
+                  <TableCell colSpan={8} className="text-center py-8">
+                    <div className="flex items-center justify-center">
+                      <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                      Loading users...
+                    </div>
+                  </TableCell>
                 </TableRow>
               ) : users.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6}>No users found</TableCell>
+                  <TableCell colSpan={8} className="text-center py-8">
+                    <div className="flex flex-col items-center gap-2">
+                      <Users className="w-8 h-8 text-muted-foreground" />
+                      <p className="text-muted-foreground">No users found</p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearFilters}
+                      >
+                        Clear filters
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ) : (
                 users.map((user: UserType) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-semibold">{user.name}</TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>{user.gender}</TableCell>
-                    <TableCell>{user.role}</TableCell>
-                    <TableCell>{user.subscription}</TableCell>
-                    <TableCell className="space-x-4">
-                      <Button onClick={() => handleEditUser(user)} size="icon">
+                  <TableRow key={user.id} className="hover:bg-muted/50">
+                    <TableCell>
+                      <p className="font-medium">{user.name}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p className="text-sm text-muted-foreground">
+                        {user.gender}
+                      </p>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <p className="text-sm">{user.phone}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>{getRoleBadge(user.role)}</TableCell>
+                    <TableCell>
+                      {getSubscriptionBadge(user.subscription)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        onClick={() => handleEditUser(user)}
+                        className=" transition text-white"
+                        size="icon"
+                      >
                         <Edit />
                       </Button>
                     </TableCell>

@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Search, Edit, Trash, View } from "lucide-react";
+import { Search, Edit, Trash, View, File, RefreshCw } from "lucide-react";
 import CreateTagModal from "@/components/create-tag-modal";
 import CloudinaryUpload from "@/components/cloudinary-widget";
 import { getThumbnailUrl } from "@/utils/thumbGenerater";
@@ -88,10 +88,29 @@ export default function MediaLibrary() {
     );
   };
 
+  const clearFilters = () => {
+    setSearchName("");
+    setTypeFilter("none");
+    setTagFilter("none");
+    setPage(1);
+  };
+
+  const activeFiltersCount = [
+    searchName,
+    typeFilter !== "none" ? typeFilter : null,
+    tagFilter !== "none" ? tagFilter : null,
+  ].filter(Boolean).length;
+
   return (
     <div className=" space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Media Library</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Upload Media</h1>
+          <p className="text-muted-foreground mt-2">
+            Upload images and videos to use in your quizzes, questions, and
+            answers. You can also add tags to organize your media.
+          </p>
+        </div>
         <div className="flex gap-2">
           <CloudinaryUpload />
         </div>
@@ -133,6 +152,11 @@ export default function MediaLibrary() {
             ))}
           </SelectContent>
         </Select>
+        {activeFiltersCount > 0 && (
+          <Button variant="ghost" size="sm" onClick={clearFilters}>
+            Clear all
+          </Button>
+        )}
       </div>
 
       {/* Main Media Table */}
@@ -154,11 +178,24 @@ export default function MediaLibrary() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6}>Loading...</TableCell>
+                <TableCell colSpan={8} className="text-center py-8">
+                  <div className="flex items-center justify-center">
+                    <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                    Loading media's...
+                  </div>
+                </TableCell>
               </TableRow>
             ) : mediaItems?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6}>No media found</TableCell>
+                <TableCell colSpan={8} className="text-center py-8">
+                  <div className="flex flex-col items-center gap-2">
+                    <File className="w-8 h-8 text-muted-foreground" />
+                    <p className="text-muted-foreground">No media found</p>
+                    <Button variant="outline" size="sm" onClick={clearFilters}>
+                      Clear filters
+                    </Button>
+                  </div>
+                </TableCell>
               </TableRow>
             ) : (
               mediaItems?.map((item) => (

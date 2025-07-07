@@ -6,6 +6,7 @@ import {
   Home,
   Lightbulb,
   LogOut,
+  Menu,
   Tags,
   UploadIcon,
   Users,
@@ -63,7 +64,8 @@ const items = [
     title: "Notifications",
     url: "/notifications",
     icon: Bell,
-  },{
+  },
+  {
     title: "Books",
     url: "/books",
     icon: BookOpen,
@@ -89,6 +91,7 @@ export function Sidebar() {
     <>
       {/* Sidebar */}
       <nav aria-label="Main navigation ">
+        {/* Navbar for small screens */}
         <UISidebar
           variant="floating"
           className={`fixed lg:sticky   transform transition-transform duration-200  ease-in-out `}

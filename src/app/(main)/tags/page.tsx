@@ -70,7 +70,7 @@ const Tags = () => {
             item.name.toLowerCase().includes(searchQuery.toLowerCase())
           )
           .map((tag) => (
-            <Card className="bg-white" key={tag.id}>
+            <Card key={tag.id}>
               <CardHeader>
                 <CardTitle className="text-lg">{tag.name}</CardTitle>
               </CardHeader>

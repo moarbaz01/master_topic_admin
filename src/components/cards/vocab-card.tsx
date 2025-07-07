@@ -1,16 +1,13 @@
 "use client";
 import { FC } from "react";
-import { VocabularyCardProps } from "@/types/vocabs";
-import {
-  Card,
-} from "../ui/card";
+import { Card } from "../ui/card";
 import { Edit, Trash, WholeWord } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { VocabularyType } from "@/types/vocabs";
 
-const VocabularyCard: FC<VocabularyCardProps> = ({ id, title }) => {
+const VocabularyCard: FC<VocabularyType> = ({ id, title }) => {
   const router = useRouter();
-
   const handleDelete = async () => {};
   return (
     <Card className="flex items-center justify-between p-3 w-full max-w-[200px] text-sm">

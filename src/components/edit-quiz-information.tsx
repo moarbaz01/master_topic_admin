@@ -44,7 +44,7 @@ const EditQuizInformation = ({ id }: { id: string }) => {
     <Card className=" max-w-3xl mt-4">
       <CardContent className="space-y-4">
         <div className="space-y-4">
-          <Label className="text-gray-400">Quiz Title</Label>
+          <Label >Quiz Title</Label>
           <Input
             placeholder="Quiz Title"
             value={title}
@@ -52,7 +52,7 @@ const EditQuizInformation = ({ id }: { id: string }) => {
           />
         </div>
         <div className="space-y-4">
-          <Label className="text-gray-400">Total Questions</Label>
+          <Label >Total Questions</Label>
           <Input
             type="number"
             placeholder="Total Questions"
@@ -63,7 +63,7 @@ const EditQuizInformation = ({ id }: { id: string }) => {
           />
         </div>
         <div className="space-y-4">
-          <Label className="text-gray-400">Total Time</Label>
+          <Label >Total Time</Label>
           <Input
             type="number"
             placeholder="Total Time (in minutes)"

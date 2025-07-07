@@ -1,22 +1,30 @@
 "use client";
 import VocabularyCard from "@/components/cards/vocab-card";
+import VocabModal from "@/components/modals/vocab-modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useVocabularies } from "@/queries/vocabulary";
 import { Plus, Search } from "lucide-react";
 import React, { useState } from "react";
 
 function Vocabularies() {
   const [searchTitle, setSearchTitle] = useState("");
+  const [openVocabModal, setOpenVocabModal] = useState(false);
+  const { data: vocabulary, isLoading } = useVocabularies();
 
   const handleCreateVocab = () => {
-    // Logic to create a new vocabulary
-    console.log("Create new vocabulary");
+    setOpenVocabModal(true);
   };
   return (
     <div className="space-y-6">
       {" "}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Vocabularies</h2>
+        <div className="">
+          <h1 className="text-3xl font-bold">Vocabulary Management</h1>
+          <p className="text-muted-foreground">
+            Create and manage your vocabulary collections
+          </p>
+        </div>
         <Button onClick={handleCreateVocab}>
           <Plus className="mr-2 h-4 w-4" /> Create Vocab
         </Button>
@@ -31,9 +39,27 @@ function Vocabularies() {
         />
       </div>
       {/* Cards */}
-      <div>
-        <VocabularyCard id="1" title="Machinery Words" />
-      </div>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {vocabulary
+            ?.filter((vocab) =>
+              vocab.title.toLowerCase().includes(searchTitle.toLowerCase())
+            )
+            .map((vocab) => (
+              <VocabularyCard
+                key={vocab.id}
+                title={vocab.title}
+                id={vocab.id}
+              />
+            ))}
+        </div>
+      )}
+      <VocabModal
+        open={openVocabModal}
+        onClose={() => setOpenVocabModal(false)}
+      />
     </div>
   );
 }

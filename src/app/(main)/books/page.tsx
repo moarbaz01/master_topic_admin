@@ -1,7 +1,6 @@
 "use client";
-import { BookCard } from "@/components/cards/book-card";
+import BookCard from "@/components/cards/book-card";
 import BookModal from "@/components/modals/book-modal";
-import AddBookModal from "@/components/modals/book-modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useBook } from "@/queries/book";
@@ -13,9 +12,15 @@ const Books = () => {
   const [searchTitle, setSearchTitle] = useState("");
   const [showAddBookModal, setShowAddBookModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState<BookType | null>(null);
-  const { data, isLoading } = useBook({});
 
+  const handleEdit = (book: BookType) => {
+    setSelectedBook(book);
+    setShowAddBookModal(true);
+  };
+
+  const { data, isLoading } = useBook({ title: searchTitle });
   const books = data?.data || [];
+  const count = data?.count || 0;
   return (
     <>
       <div className="space-y-6">
@@ -41,17 +46,25 @@ const Books = () => {
           />
         </div>
 
+        <p className="text-sm text-muted-foreground">
+          {count} {count === 1 ? "book" : "books"} found
+        </p>
+
         <div>
           {isLoading ? (
             <p>Loading...</p>
           ) : books.length === 0 ? (
             <p>No books found</p>
           ) : (
-            <ul className="space-y-4 flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
               {books.map((book) => (
-                <BookCard key={book.id} book={book} />
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  handleEdit={() => handleEdit(book)}
+                />
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </div>

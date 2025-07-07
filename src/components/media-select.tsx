@@ -7,11 +7,15 @@ import { MediaPickerModal } from "./modals/media-picker-modal";
 
 export function MediaSelectInput({
   label,
+  title = "Select Media",
   value,
+  icon,
   onChange,
   filterFormat,
 }: {
-  label: string;
+  label?: string;
+  title?: string;
+  icon?: React.ReactNode;
   value?: string;
   onChange: (url: string) => void;
   filterFormat?: string;
@@ -20,16 +24,13 @@ export function MediaSelectInput({
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-medium">{label}</p>
+      {label && <p className="text-sm font-medium">{label}</p>}
 
-      <div className="flex items-center gap-4">
-        {value ? (
-          <MediaPreview url={value} small />
-        ) : (
-          <p className="text-muted-foreground text-sm">No media selected</p>
-        )}
-        <Button size="sm" onClick={() => setOpen(true)}>
-          Select Media
+      <div className="flex items-center  gap-4">
+        {value && <MediaPreview url={value} small />}
+        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+          {icon && icon}
+          {value ? "Change Media" : title}
         </Button>
       </div>
 

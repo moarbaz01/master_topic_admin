@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BookService } from "@/services/book"; // assuming your service is saved as /services/media.ts
 import { GetMediaParams } from "@/types/media";
+import { GetBookParams } from "@/types/book";
 
-export const useBook = (params: GetMediaParams) => {
+export const useBook = (params: GetBookParams) => {
   return useQuery({
     queryKey: ["book", params],
     queryFn: () => BookService.getBook(params),

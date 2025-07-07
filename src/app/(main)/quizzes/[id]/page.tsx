@@ -1,17 +1,14 @@
 "use client";
 
 import { ArrowLeft, Plus } from "lucide-react";
-import {
-  useGetQuizById,
-  useGetSectionsByQuizId,
-} from "@/queries/quiz";
+import { useGetQuizById, useGetSectionsByQuizId } from "@/queries/quiz";
 import { useParams, useRouter } from "next/navigation";
 import EditQuizInformation from "@/components/edit-quiz-information";
 import { Button } from "@/components/ui/button";
 import QuizSectionModal from "@/components/modals/quiz-section-modal";
 import { useState } from "react";
 import QuizQuestionModal from "@/components/modals/quiz-question-modal";
-import QuizSectionCard from "@/components/quiz-section-card";
+import QuizSectionCard from "@/components/cards/quiz-section-card";
 
 export default function QuizEditPage() {
   const { id } = useParams();

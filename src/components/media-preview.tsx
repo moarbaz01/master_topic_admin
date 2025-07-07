@@ -9,7 +9,7 @@ export function MediaPreview({
 }) {
   const size = small ? 60 : 250;
 
-  if (url.endsWith(".mp3")) {
+  if (url.match(/\.(mp3|wav|ogg)$/)) {
     return (
       <audio controls className="w-full h-8 mt-1">
         <source src={url} type="audio/mp3" />
@@ -17,7 +17,7 @@ export function MediaPreview({
     );
   }
 
-  if (url.endsWith(".mp4")) {
+  if (url.match(/\.(mp4|webm|ogg)$/)) {
     return (
       <video
         controls
