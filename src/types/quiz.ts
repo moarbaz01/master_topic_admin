@@ -17,14 +17,14 @@ export interface QuizQuestionType {
   id: string;
   quiz_id: string;
   section_id: string;
-  type: string;
+  type: "image" | "text" | "audio";
   question: string;
   description?: string;
   image?: string;
   audio?: string;
   images?: string[];
   options?: string[];
-  correct_answer: string;
+  correct_answer?: string;
 }
 
 export interface QuizOptionType {

@@ -25,7 +25,6 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import WarnModal from "./modals/warn-modal";
 import { AuthService } from "@/services/auth";
-import { supabase } from "@/lib/supabase/client";
 import { useGetSession, useGetUserById } from "@/queries/user";
 
 // Menu items with notification counts and descriptions
@@ -159,10 +158,11 @@ function AnimatedMenuItem({
       <div
         className={cn(
           "group relative overflow-hidden rounded-xl p-3 transition-all duration-300 ease-out cursor-pointer",
-          "hover:bg-accent hover:text-accent-foreground hover:shadow-md hover:scale-[1.02]",
-          "active:scale-[0.98] active:transition-transform active:duration-100",
-          isActive &&
-            "bg-primary text-primary-foreground shadow-lg scale-[1.02]"
+          "hover:bg-accent hover:text-accent-foreground hover:shadow-md ",
+          " active:transition-transform active:duration-100",
+          isActive
+            ? "bg-primary text-primary-foreground shadow-lg scale-[1.02]"
+            : ""
         )}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -178,7 +178,7 @@ function AnimatedMenuItem({
               size={20}
               className={cn(
                 "transition-colors duration-300",
-                isActive && "text-primary-foreground"
+                isActive ? "text-primary-foreground" : ""
               )}
             />
             {item.badge && (
@@ -200,7 +200,7 @@ function AnimatedMenuItem({
             <div
               className={cn(
                 "text-sm font-semibold transition-colors duration-300",
-                isActive && "text-primary-foreground"
+                isActive ? "text-primary-foreground" : ""
               )}
             >
               {item.title}
@@ -208,7 +208,7 @@ function AnimatedMenuItem({
             <div
               className={cn(
                 "text-xs opacity-70 transition-colors duration-300",
-                isActive && "text-primary-foreground/80"
+                isActive ? "text-primary-foreground/80" : ""
               )}
             >
               {item.description}
@@ -218,7 +218,7 @@ function AnimatedMenuItem({
           <ChevronRight
             className={cn(
               "h-3 w-3 opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1",
-              isActive && "opacity-100 text-primary-foreground"
+              isActive ? "opacity-100 text-primary-foreground" : ""
             )}
           />
 
@@ -339,7 +339,7 @@ export function Sidebar() {
                 <AnimatedMenuItem
                   key={item.title}
                   item={item}
-                  isActive={pathname === item.url}
+                  isActive={pathname == item.url}
                   onClick={handleItemClick}
                 />
               ))}

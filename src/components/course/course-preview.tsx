@@ -52,8 +52,8 @@ export default function CoursePreview({ course }: CoursePreviewProps) {
             <div
               className="w-24 h-16 rounded-lg flex items-center justify-center"
               style={{
-                background: course.thumbnail_color
-                  ? `linear-gradient(135deg, ${course.thumbnail_color[0]}, ${course.thumbnail_color[1]})`
+                background: course?.thumbnail_color
+                  ? `linear-gradient(135deg, ${course?.thumbnail_color[0]}, ${course?.thumbnail_color[1]})`
                   : "linear-gradient(135deg, #3B82F6, #1E40AF)",
               }}
             >
@@ -61,22 +61,22 @@ export default function CoursePreview({ course }: CoursePreviewProps) {
             </div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold">
-                {course.title || "Untitled Course"}
+                {course?.title || "Untitled Course"}
               </h2>
               <p className="text-muted-foreground mt-1">
-                {course.description || "No description provided"}
+                {course?.description || "No description provided"}
               </p>
               <div className="flex items-center gap-2 mt-3 flex-wrap">
-                {course.level && (
+                {course?.level && (
                   <Badge variant="outline">{course.level}</Badge>
                 )}
-                {course.category && (
+                {course?.category && (
                   <Badge variant="outline">{course.category}</Badge>
                 )}
-                {course.is_new && (
+                {course?.is_new && (
                   <Badge className="bg-green-100 text-green-800">New</Badge>
                 )}
-                {course.is_paid ? (
+                {course?.is_paid ? (
                   <Badge className="bg-blue-100 text-blue-800">Paid</Badge>
                 ) : (
                   <Badge className="bg-gray-100 text-gray-800">Free</Badge>
@@ -91,7 +91,7 @@ export default function CoursePreview({ course }: CoursePreviewProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card>
               <CardContent className="pt-6">
-                <div className="text-2xl font-bold">{lectures?.length}</div>
+                <div className="text-2xl font-bold">{lectures?.length ?? 0}</div>
                 <p className="text-sm text-muted-foreground">Lectures</p>
               </CardContent>
             </Card>
@@ -107,19 +107,19 @@ export default function CoursePreview({ course }: CoursePreviewProps) {
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold flex items-center gap-1">
                   <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  {(course.rating || 0).toFixed(1)}
+                  {(course?.rating || 0).toFixed(1)}
                 </div>
                 <p className="text-sm text-muted-foreground">Rating</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-2xl font-bold">${course.price || 0}</div>
+                <div className="text-2xl font-bold">${course?.price || 0}</div>
                 <p className="text-sm text-muted-foreground">
-                  {course.original_price &&
-                    course.original_price > (course.price || 0) && (
+                  {course?.original_price &&
+                    course?.original_price > (course?.price || 0) && (
                       <span className="line-through text-muted-foreground mr-1">
-                        ${course.original_price}
+                        ${course?.original_price}
                       </span>
                     )}
                   Price
@@ -140,13 +140,13 @@ export default function CoursePreview({ course }: CoursePreviewProps) {
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Free Lectures:</span>
                   <span>
-                    {getUnlockedLecturesCount()} of {lectures?.length}
+                    {getUnlockedLecturesCount()} of {lectures?.length ?? 0}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Course Type:</span>
-                  <Badge variant={course.is_paid ? "default" : "secondary"}>
-                    {course.is_paid ? "Paid Course" : "Free Course"}
+                  <Badge variant={course?.is_paid ? "default" : "secondary"}>
+                    {course?.is_paid ? "Paid Course" : "Free Course"}
                   </Badge>
                 </div>
               </CardContent>
@@ -159,26 +159,12 @@ export default function CoursePreview({ course }: CoursePreviewProps) {
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Original Price:</span>
-                  <span>${course.original_price || 0}</span>
+                  <span>${course?.original_price || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Current Price:</span>
-                  <span className="font-semibold">${course.price || 0}</span>
+                  <span className="font-semibold">${course?.price || 0}</span>
                 </div>
-                {/* {course.original_price &&
-                  course.original_price > (course.price || 0) && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Discount:</span>
-                      <Badge variant="destructive">
-                        {Math.round(
-                          ((course.original_price - (course.price || 0)) /
-                            course.original_price) *
-                            100
-                        )}
-                        % OFF
-                      </Badge>
-                    </div>
-                  )} */}
               </CardContent>
             </Card>
           </div>

@@ -85,7 +85,7 @@ export const useAddQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: QuizService.addQuestion,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["quizzes"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["questions"] }),
   });
 };
 
@@ -94,7 +94,7 @@ export const useUpdateQuestion = () => {
   return useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: any }) =>
       QuizService.updateQuestion(id, updates),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["quizzes"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["questions"] }),
   });
 };
 
@@ -102,7 +102,7 @@ export const useDeleteQuestion = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: QuizService.deleteQuestion,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["quizzes"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["questions"] }),
   });
 };
 
@@ -119,7 +119,7 @@ export const useAddOption = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: QuizService.addOption,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["quizzes"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["quizzes","sections"] }),
   });
 };
 

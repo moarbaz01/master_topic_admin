@@ -3,7 +3,6 @@
 import { useGetMediaById } from "@/queries/media";
 import { Loader2, FileText } from "lucide-react";
 import Image from "next/image";
-import PDF from "react-pdf-js";
 
 export default function MediaDetailPage({ id }: { id: string }) {
   const { data: media, isLoading, isError } = useGetMediaById(id);

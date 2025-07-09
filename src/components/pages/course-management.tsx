@@ -1,29 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CourseBasicInfo from "../course/course-basic-info";
 import CourseLectures from "../course/course-lectures";
 import CoursePreview from "../course/course-preview";
-import { CourseType } from "@/types/course";
+import { CourseType, LectureType } from "@/types/course";
 import { useCourseById } from "@/queries/course";
-
-interface Lecture {
-  id: string;
-  course_id: string;
-  lesson_number: number;
-  title?: string;
-  is_locked: boolean;
-  duration?: number;
-  created_at?: string;
-}
 
 interface CourseManagementProps {
   courseId?: string;
   initialData?: {
     course: CourseType;
-    lectures: Lecture[];
+    lectures: LectureType[];
   };
 }
 

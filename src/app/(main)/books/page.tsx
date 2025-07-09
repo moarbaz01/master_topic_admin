@@ -25,14 +25,20 @@ const Books = () => {
   return (
     <>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Books</h2>
+        <div className="flex flex-col md:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">My Books</h1>
+            <p className="text-muted-foreground">
+              Manage and track your books portfolio
+            </p>
+          </div>
           <Button
             onClick={() => {
               setShowAddBookModal(true);
             }}
+            className="flex items-center gap-2"
           >
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="w-4 h-4" />
             Add Book
           </Button>
         </div>

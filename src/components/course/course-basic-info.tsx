@@ -25,7 +25,7 @@ import { Save, RefreshCw, Check } from "lucide-react";
 
 import { toast } from "react-hot-toast";
 import { CourseType, CreateCourseType } from "@/types/course";
-import { courseLevels, thumbnailColors } from "../../../data";
+import { courseLevels, courseStatus, thumbnailColors } from "../../../data";
 import { useAddCourse, useUpdateCourse } from "@/queries/course";
 import Loader from "../ui/loader";
 import isEqual from "lodash/isEqual";
@@ -148,7 +148,7 @@ export default function CourseBasicInfo({ course }: CourseBasicInfoProps) {
 
           <CardContent className="space-y-6">
             {/* Title & Level */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-4">
               <div className="space-y-2">
                 <Label htmlFor="course-title">Course Title *</Label>
                 <Input
@@ -170,6 +170,24 @@ export default function CourseBasicInfo({ course }: CourseBasicInfoProps) {
                   </SelectTrigger>
                   <SelectContent>
                     {courseLevels.map(({ value, label }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="course-level">Status</Label>
+                <Select
+                  value={courseData.status}
+                  onValueChange={(value) => handleChange("status", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {courseStatus.map(({ value, label }) => (
                       <SelectItem key={value} value={value}>
                         {label}
                       </SelectItem>

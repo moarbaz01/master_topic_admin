@@ -44,3 +44,15 @@ export const courseLevels = [
   { value: "advanced", label: "Advanced" },
   { value: "expert", label: "Expert" },
 ];
+
+export const courseStatus = [
+  { value: "draft", label: "Draft" },
+  { value: "published", label: "Published" },
+  { value: "archived", label: "Archived" },
+];
+
+export const questionTypes = [
+  { value: "text", label: "Text Based" },
+  { value: "image", label: "Image Based" },
+  { value: "audio", label: "Audio Based" },
+];

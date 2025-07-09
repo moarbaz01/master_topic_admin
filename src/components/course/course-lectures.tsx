@@ -8,7 +8,6 @@ import LectureItem from "@/components/course/lecture-item";
 import { CourseType } from "@/types/course";
 import { useAddLecture, useLecturesByCourseId } from "@/queries/lecture";
 import toast from "react-hot-toast";
-import { add } from "lodash";
 
 interface CourseLecturesProps {
   course: CourseType;
@@ -26,7 +25,7 @@ export default function CourseLectures({ course }: CourseLecturesProps) {
         description: "",
         duration: 0,
         video_url: "",
-        course_id: course.id,
+        course_id: course?.id,
       },
       {
         onSuccess: () => {
@@ -50,7 +49,7 @@ export default function CourseLectures({ course }: CourseLecturesProps) {
         </div>
         <Button
           onClick={handleAddLecture}
-          disabled={addLecture.isPending || !course.id}
+          disabled={addLecture.isPending || !course?.id}
           className="flex items-center gap-2"
         >
           {addLecture.isPending ? (
@@ -61,17 +60,28 @@ export default function CourseLectures({ course }: CourseLecturesProps) {
           Add Lecture
         </Button>
       </div>
-{/* 
-      {allLectures && allLectures.length > 0 && (
-        <Card className="border-amber-200 bg-amber-50">
+      {/* 
+      // {allLectures && allLectures.length > 0 && (
+      //   <Card className="border-amber-200 bg-amber-50">
+      //     <CardContent className="p-4 flex items-center gap-2">
+      //       <AlertCircle className="w-4 h-4 text-amber-600" />
+      //       <p className="text-amber-800">
+      //         Please save the course information first before adding lectures.
+      //       </p>
+      //     </CardContent>
+      //   </Card>
+      // )} */}
+
+      {!course?.id && (
+        <Card className="border-red-200 bg-red-50">
           <CardContent className="p-4 flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-600" />
-            <p className="text-amber-800">
+            <AlertCircle className="w-4 h-4 text-red-600" />
+            <p className="text-red-800">
               Please save the course information first before adding lectures.
             </p>
           </CardContent>
         </Card>
-      )} */}
+      )}
 
       <ScrollArea className="h-[600px] w-full max-w-full overflow-x-hidden md:pr-4">
         <div className="space-y-4">

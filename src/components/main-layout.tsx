@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Sidebar } from "./sidebar";
 import { SidebarProvider } from "./ui/sidebar";
+import { Breadcrumb } from "./ui/breadcrumb";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
@@ -16,7 +17,8 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           className="flex-1 min-h-screen pt-20 sm:pt-0  lg:ml-[100px] xl:ml-[200px] p-4 md:p-6  overflow-y-auto"
           id="main-content"
         >
-          <div className="  mx-auto w-full">{children}</div>
+          <Breadcrumb/>
+          <div className=" md:mt-4 mx-auto w-full">{children}</div>
         </main>
       </div>
     </SidebarProvider>
